@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "detect-gpu"
+    ignore:
+      - dependency-name: "detect-gpu"
+        update-types:
+          ["version-update:semver-major", "version-update:semver-minor"]

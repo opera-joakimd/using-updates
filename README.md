@@ -6,4 +6,5 @@ Showing off auto updating detect-gpu along with self hosted benchmarks
 3. Then the PR will have 2 commits which together bumps detect-gpu and updates all the self-hosted benchmark files
 ## Thoughts
 - The two commits could be squashed when merging so we have a single commit.
+- But if we dont do rebasing then we probably need to update the integration check since it doesnt conform to the commit naming standard.
 - ???

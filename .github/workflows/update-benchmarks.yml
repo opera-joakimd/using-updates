@@ -1,0 +1,33 @@
+on: [pull_request]
+
+jobs:
+  update-detect-gpu-benchmarks:
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    name: Update benchmarks
+    if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
+    steps:
+      - uses: actions/checkout@v3
+        name: "Setup git"
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      - shell: bash
+        name: "Update benchmarks"
+        run: |
+          cd public
+          wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
+          rm -r benchmarks
+          mv benchmarks-min benchmarks
+      - uses: EndBug/add-and-commit@v9
+        name: "Push changes"
+        with:
+          add: "public/benchmarks/"
+          message: "update benchmarks"
+          new_branch: ${{github.head_ref}}
+          default_author: "github_actions"
+          github_token: ${{secrets.GITHUB_TOKEN}}

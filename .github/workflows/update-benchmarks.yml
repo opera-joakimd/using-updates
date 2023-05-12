@@ -1,4 +1,7 @@
-on: [pull_request]
+on:
+  pull_request_target:
+    types:
+      - opened
 
 jobs:
   update-detect-gpu-benchmarks:
@@ -10,24 +13,39 @@ jobs:
     name: Update benchmarks
     if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
-      - uses: actions/checkout@v3
-        name: "Setup git"
+      - name: Create task
+        id: task
+        uses: opera-joakimd/linear-task-action@main
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-      - shell: bash
-        name: "Update benchmarks"
+          key: ${{secrets.LINEAR_API_KEY}}
+          team: "action-test"
+          pr_name: ${{github.event.pull_request.title}}
+      - name: Setup git
+        run: |
+          git init
+          git config --local user.name github-actions[bot]
+          git config --local user.email github-actions[bot]@users.noreply.github.com
+          git remote add origin "https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git"
+          git fetch
+          git checkout ${{github.head_ref}}
+      - name: "Update benchmarks"
+        shell: bash
         run: |
           cd public
           wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
           rm -r benchmarks
           mv benchmarks-min benchmarks
-      - uses: EndBug/add-and-commit@v9
-        name: "Push changes"
-        with:
-          add: "public/benchmarks/"
-          message: "update benchmarks"
-          new_branch: ${{github.head_ref}}
-          default_author: "github_actions"
-          github_token: ${{secrets.GITHUB_TOKEN}}
+      - name: Commit and squash
+        run: |
+          git add .
+          git commit -m "temp"
+          git reset --soft $(git log -1 --format=format:%H)~2
+          git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
+          git push -f
+      - name: Rename PR
+        run: |
+          curl --request PATCH \
+          --url https://api.github.com/repos/${{github.repository}}/pulls/${{github.event.pull_request.number}} \
+          --header 'authorization: Bearer ${{secrets.GITHUB_TOKEN}}' \
+          --header 'content-type: application/json' \
+          --data '{"title": "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"}'

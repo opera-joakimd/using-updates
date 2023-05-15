@@ -1,0 +1,17 @@
+on: [push]
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: get task
+    steps:
+      - name: create task
+        env:
+          LINEAR_API_KEY: ${{secrets.LINEAR_API_KEY}}
+        id: task
+        uses: opera-joakimd/linear-task-action@main
+        with:
+          team: "action-test"
+          pr_name: "some random name"
+      - name: Get the task id
+        run: echo "The task is ${{ steps.task.outputs.task_id }}"

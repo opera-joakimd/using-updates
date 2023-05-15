@@ -36,7 +36,7 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "temp"
-          git reset --soft HEAD~2
+          git reset --soft $(git log -1 --format=format:%H)
           git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
           git push -f
       #- name: "Push changes"

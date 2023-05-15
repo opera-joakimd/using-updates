@@ -11,11 +11,12 @@ jobs:
     if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
       - name: create task
-        env:
-          LINEAR_API_KEY: ${{secrets.LINEAR_API_KEY}}
+        #env:
+        #  LINEAR_API_KEY: ${{secrets.LINEAR_API_KEY}}
         id: task
         uses: opera-joakimd/linear-task-action@main
         with:
+          key: ${{secrets.LINEAR_API_KEY}}
           team: "action-test"
           pr_name: ${{github.event.pull_request.title}}
       - name: "Setup git"

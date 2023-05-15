@@ -6,11 +6,10 @@ jobs:
     name: get task
     steps:
       - name: create task
-        env:
-          LINEAR_API_KEY: ${{secrets.LINEAR_API_KEY}}
         id: task
         uses: opera-joakimd/linear-task-action@main
         with:
+          key: ${{secrets.LINEAR_API_KEY}}
           team: "action-test"
           pr_name: "some random name"
       - name: Get the task id

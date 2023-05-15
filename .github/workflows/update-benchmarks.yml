@@ -22,7 +22,7 @@ jobs:
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: "Update benchmarks"
         shell: bash
         run: |
@@ -30,7 +30,6 @@ jobs:
           wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
           rm -r benchmarks
           mv benchmarks-min benchmarks
-      - run: echo git log --oneline
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

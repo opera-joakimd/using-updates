@@ -16,3 +16,5 @@ jobs:
           pr_name: "some random name"
       - name: Get the task id
         run: echo "The task is ${{ steps.task.outputs.task_id }}"
+      - name: "see env"
+        run: echo "the env is ${{steps.task.outputs.env}}"

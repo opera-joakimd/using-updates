@@ -9,7 +9,7 @@ jobs:
         id: task
         uses: opera-joakimd/linear-task-action@main
         with:
-          key: ${{secrets.LINEAR_API_KEY}}
+          key: "bs"
           team: "action-test"
           pr_name: "some random name"
       - name: Get the task id

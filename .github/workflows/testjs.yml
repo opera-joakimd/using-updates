@@ -11,7 +11,7 @@ jobs:
         id: task
         uses: opera-joakimd/linear-task-action@main
         with:
-          api-token: ${{secrets.LINEAR_API_KEY}}
+          api_token: ${{secrets.LINEAR_API_KEY}}
           team: "action-test"
           pr_name: "some random name"
       - name: Get the task id

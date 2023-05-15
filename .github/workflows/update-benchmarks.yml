@@ -23,6 +23,7 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 2
       - name: "Update benchmarks"
         shell: bash
         run: |
@@ -36,7 +37,7 @@ jobs:
           git add .
           git commit -m "temp"
           git reset --soft HEAD~2
-          git commit -m "${{steps.task.outputs.task_id}}: ${{gituhb.event.pull_request.title}}"
+          git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
           git push -f
       #- name: "Push changes"
       #  uses: EndBug/add-and-commit@v9

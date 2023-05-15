@@ -30,6 +30,7 @@ jobs:
           wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
           rm -r benchmarks
           mv benchmarks-min benchmarks
+      - run: echo$(git log -5 --oneline)
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com

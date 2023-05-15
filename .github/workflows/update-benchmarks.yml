@@ -37,6 +37,7 @@ jobs:
           git commit -m "temp"
           git reset --soft HEAD~2
           git commit -m "${{steps.task.outputs.task_id}}: ${{gituhb.event.pull_request.title}}"
+          git push -f
       #- name: "Push changes"
       #  uses: EndBug/add-and-commit@v9
       #  with:

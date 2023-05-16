@@ -17,6 +17,7 @@ jobs:
           key: ${{secrets.LINEAR_API_KEY}}
           team: "action-test"
           pr_name: ${{github.event.pull_request.title}}
+      - run: echo '${{ toJSON(github) }}'
       - run: |
           git init
           git config --local user.name github-actions[bot]

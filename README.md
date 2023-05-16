@@ -1,10 +1,23 @@
 ## What
+
 Showing off auto updating detect-gpu along with self hosted benchmarks
+
 ## How
-1. dependabot runs weekly checking for a new patch version of detect-gpu, if found it creates a PR updating `package.json` and `yarn.lock`
-2. Workflow is triggered by PRs and runs if PR author is dependabot. The repo is checked out. A bash script downloads the newest benchmarks and places them in `public/benchmarks`. The changes are commited and pushed to the branch created by dependabot.
-3. Then the PR will have 2 commits which together bumps detect-gpu and updates all the self-hosted benchmark files
+
+1. dependabot runs monthly checking for a new patch version of detect-gpu, if found it creates a PR updating `package.json` and `yarn.lock`
+2. The workflow is triggered by an opened PR and runs if the PR author is dependabot.
+3. A linear task is created
+4. Git is set up
+5. The newest minified benchmarks are downloaded and the changes are commited
+6. The dependabot commit and the commit to update the benchmarks are squashed into a single commit and the commit message is prefixed with the linear task id
+7. The PR title is updated
+
+## Whats needed to add to another repo
+ - Copy `dependabot.yml` as is
+ - Copy `update-benchmarks.yml`
+    1. change linear team name
+ - Generate a linear PAT
+    1. Add this to github secrets as `LINEAR_API_KEY`
+
 ## Thoughts
-- The two commits could be squashed when merging so we have a single commit.
-- But if we dont do rebasing then we probably need to update the integration check since it doesnt conform to the commit naming standard.
-- ???
+ - ???

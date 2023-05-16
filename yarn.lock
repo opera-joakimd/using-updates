@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-detect-gpu@5.0.20:
-  version "5.0.20"
-  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-5.0.20.tgz#92fa2c91714be52f28691bab05c4e8ef896f2f68"
-  integrity sha512-wL6gVIAD95OuM3/SSbeLafVTCEG3l4qA+r+mdu/RNgmAq5TVqMffYwR7a5H0IIyPCCgbaZpHAXLFWsKce0Tu6g==
+detect-gpu@5.0.24:
+  version "5.0.24"
+  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-5.0.24.tgz#3a8c6dbcb0395c82da1eff3c3ae9ea1dd37c89e9"
+  integrity sha512-cI+WJujCzsJDlYKhcildTtG7YZmWsvMSFH6+gnozHp/R+Wr/WtR361e2PFQ3oDLo8Ek2xy5Buaiv2ucAI2D1qg==
   dependencies:
     webgl-constants "^1.1.1"
 

@@ -4,6 +4,7 @@
 #   - it should not rename the PR multiple times
 #   - it should update benchmarks multiple times but not crash if theres nothing to commit
 # - it should not only run on opended but also probably synchronize so it runs for recreates and rebases
+# bloop
 
 on:
   pull_request_target:

@@ -1,5 +1,4 @@
 name: "Update detect-gpu benchmarks"
-#was
 on:
   pull_request_target:
     types:

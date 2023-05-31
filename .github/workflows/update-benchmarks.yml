@@ -1,4 +1,5 @@
 name: "Update detect-gpu benchmarks"
+#stupid change
 on:
   pull_request_target:
     types:

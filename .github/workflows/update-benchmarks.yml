@@ -4,11 +4,11 @@ on:
     types:
       - opened
       - synchronize
-    branches:
-      - "dependabot/npm_and_yarn/**"
 
 jobs:
-  update-detect-gpu-benchmarks:
+  #update-detect-gpu-benchmarks:
+  run-if:
+    if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     # available scopes: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     # required scopes for api endpoints: https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28
     # afaik there's no list of required scopes for commands or a breakdown of what each scope entails
@@ -18,7 +18,6 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     name: Update benchmarks
-    if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
       - name: Create task
         id: task

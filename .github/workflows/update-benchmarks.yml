@@ -9,6 +9,9 @@ on:
   pull_request_target:
     types:
       - opened
+      - synchronize
+    branches:
+      - "dependabot/**"
 
 jobs:
   update-detect-gpu-benchmarks:

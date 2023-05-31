@@ -18,7 +18,6 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    name: Update benchmarks
     steps:
       - name: Create task
         id: task

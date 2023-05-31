@@ -1,3 +1,10 @@
+# things to change
+# - add a name for the workflow so it looks nicer on PRs
+# - made the whole thing idempotent so it can run multiple times
+#   - it should not rename the PR multiple times
+#   - it should update benchmarks multiple times but not crash if theres nothing to commit
+# - it should not only run on opended but also probably synchronize so it runs for recreates and rebases
+
 on:
   pull_request_target:
     types:
@@ -5,21 +12,25 @@ on:
 
 jobs:
   update-detect-gpu-benchmarks:
+    # available scopes: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    # required scopes for api endpoints: https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28
+    # afaik there's no list of required scopes for commands or a breakdown of what each scope entails
+    # but api equivalent of "git commit" requires write permission for contents
     permissions:
       contents: write
       pull-requests: write
-
     runs-on: ubuntu-latest
     name: Update benchmarks
     if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
       - name: Create task
         id: task
-        uses: opera-joakimd/linear-task-action@main
+        uses: opera-joakimd/linear-task-action-copy@main
         with:
           key: ${{secrets.LINEAR_API_KEY}}
           team: "action-test"
           pr_name: ${{github.event.pull_request.title}}
+
       - name: Setup git
         run: |
           git init
@@ -28,6 +39,8 @@ jobs:
           git remote add origin "https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git"
           git fetch
           git checkout ${{github.head_ref}}
+
+      # downloads and unzips new benchmarks, removes old ones, renames the new ones to the correct name
       - name: "Update benchmarks"
         shell: bash
         run: |
@@ -35,6 +48,9 @@ jobs:
           wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
           rm -r benchmarks
           mv benchmarks-min benchmarks
+
+      # commit the changes from updating benchmarks then soft resets it and the previous commit
+      # and commits them as 1 with the correctly prefixed message
       - name: Commit and squash
         run: |
           git add .
@@ -42,6 +58,8 @@ jobs:
           git reset --soft $(git log -1 --format=format:%H)~2
           git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
           git push -f
+
+      # https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#update-a-pull-request
       - name: Rename PR
         run: |
           curl --request PATCH \

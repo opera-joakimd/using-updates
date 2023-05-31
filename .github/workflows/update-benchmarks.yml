@@ -30,7 +30,7 @@ jobs:
         with:
           key: ${{secrets.LINEAR_API_KEY}}
           team_name: "action-test"
-          title: ${{github.event.pull_request.title}}
+          pr_name: ${{github.event.pull_request.title}}
 
       - name: Setup git
         run: |

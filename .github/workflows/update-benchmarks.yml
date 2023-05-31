@@ -4,6 +4,8 @@ on:
     types:
       - opened
       - synchronize
+    branches:
+      - "dependabot/**/**"
 
 jobs:
   update-detect-gpu-benchmarks:

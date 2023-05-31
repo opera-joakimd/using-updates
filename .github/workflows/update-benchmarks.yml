@@ -5,7 +5,7 @@ on:
       - opened
       - synchronize
     branches:
-      - dependabot/**
+      - dependabot/npm_and_yarn/*
 
 jobs:
   update-detect-gpu-benchmarks:

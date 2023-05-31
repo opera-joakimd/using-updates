@@ -55,6 +55,7 @@ jobs:
 
       #continue on error
       - name: Commit and squash
+        continue-on-error: true
         run: |
           git add .
           git commit -m "temp"

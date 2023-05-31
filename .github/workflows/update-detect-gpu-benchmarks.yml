@@ -1,25 +1,30 @@
+name: "Update detect-gpu benchmarks"
 on:
   pull_request_target:
     types:
       - opened
+      - synchronize
 
 jobs:
   update-detect-gpu-benchmarks:
+    if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
+    # available scopes: https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    # required scopes for api endpoints: https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28
+    # afaik there's no list of required scopes for commands or a breakdown of what each scope entails
+    # but api equivalent of "git commit" requires write permission for contents
     permissions:
       contents: write
       pull-requests: write
-
     runs-on: ubuntu-latest
-    name: Update benchmarks
-    if: ${{github.event.pull_request.user.login == 'dependabot[bot]'}}
     steps:
       - name: Create task
         id: task
-        uses: opera-joakimd/linear-task-action@main
+        uses: opera-joakimd/linear-task-action-copy@main
         with:
           key: ${{secrets.LINEAR_API_KEY}}
-          team: "action-test"
+          team_name: "action-test"
           pr_name: ${{github.event.pull_request.title}}
+
       - name: Setup git
         run: |
           git init
@@ -28,6 +33,8 @@ jobs:
           git remote add origin "https://x-access-token:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git"
           git fetch
           git checkout ${{github.head_ref}}
+
+      # downloads and unzips new benchmarks, removes old ones, renames the new ones to the correct name
       - name: "Update benchmarks"
         shell: bash
         run: |
@@ -35,14 +42,22 @@ jobs:
           wget -c https://github.com/pmndrs/detect-gpu/raw/master/benchmarks.tar.gz -O - | tar -xz
           rm -r benchmarks
           mv benchmarks-min benchmarks
+
+      # commit the changes from updating benchmarks then soft resets it and the previous commit
+      # and commits them as 1 with the correctly prefixed message
       - name: Commit and squash
+        continue-on-error: true
         run: |
           git add .
           git commit -m "temp"
+          echo "::error::nothing to commit"
           git reset --soft $(git log -1 --format=format:%H)~2
-          git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
+          git commit -m "${{steps.task.outputs.task_id}}: Bump detect-gpu benchmarks"
           git push -f
+
+      # https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#update-a-pull-request
       - name: Rename PR
+        if: ${{!startsWith(github.event.pull_request.title, steps.task.outputs.task_id)}}
         run: |
           curl --request PATCH \
           --url https://api.github.com/repos/${{github.repository}}/pulls/${{github.event.pull_request.number}} \

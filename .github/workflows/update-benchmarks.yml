@@ -1,11 +1,4 @@
-# things to change
-# - add a name for the workflow so it looks nicer on PRs
-# - made the whole thing idempotent so it can run multiple times
-#   - it should not rename the PR multiple times
-#   - it should update benchmarks multiple times but not crash if theres nothing to commit
-# - it should not only run on opended but also probably synchronize so it runs for recreates and rebases
-# bloop
-
+name: "Update detect-gpu benchmarks"
 on:
   pull_request_target:
     types:
@@ -53,22 +46,17 @@ jobs:
 
       # commit the changes from updating benchmarks then soft resets it and the previous commit
       # and commits them as 1 with the correctly prefixed message
-
-      #continue on error
       - name: Commit and squash
         continue-on-error: true
         run: |
           git add .
           git commit -m "temp"
-          echo "::error::This is an error message after commit"
+          echo "::error::nothing to commit"
           git reset --soft $(git log -1 --format=format:%H)~2
           git commit -m "${{steps.task.outputs.task_id}}: ${{github.event.pull_request.title}}"
           git push -f
 
       # https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#update-a-pull-request
-
-      # add an if to check the current PR name first
-      # if starts with task_id
       - name: Rename PR
         if: ${{!startsWith(github.event.pull_request.title, steps.task.outputs.task_id)}}
         run: |

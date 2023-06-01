@@ -51,6 +51,7 @@ jobs:
           git add .
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit"
+            exit 0
           else
             git commit -m "temp"
             git reset --soft $(git log -1 --format=format:%H)~2

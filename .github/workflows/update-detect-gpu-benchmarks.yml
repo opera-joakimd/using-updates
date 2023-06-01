@@ -46,7 +46,6 @@ jobs:
       # commit the changes from updating benchmarks then soft resets it and the previous commit
       # and commits them as 1 with the correctly prefixed message
       - name: Commit and squash
-        continue-on-error: true
         run: |
           git add .
           if git diff-index --quiet HEAD --; then

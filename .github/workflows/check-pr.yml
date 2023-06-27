@@ -1,0 +1,25 @@
+name: Check pull request
+on:
+  pull_request:
+    types: [opened, edited, ready_for_review, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check target branch of backports
+        uses: Vankka/pr-target-branch-action@v1.1
+        with:
+          target: main
+          include: /\/stable\//
+#      - name: Move linked issues to In Review or In Progress column
+#        uses: rharter/github-move-linked-project-cards@v0.1.0
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          column: In review
+#          draft-column: In progress

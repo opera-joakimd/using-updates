@@ -17,9 +17,9 @@ jobs:
         with:
           target: main
           include: /\/stable\//
-#      - name: Move linked issues to In Review or In Progress column
-#        uses: rharter/github-move-linked-project-cards@v0.1.0
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          column: In review
-#          draft-column: In progress
+      - name: Move linked issues to In Review or In Progress column
+        uses: rharter/github-move-linked-project-cards@v0.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          column: In review
+          draft-column: In progress

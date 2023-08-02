@@ -13,11 +13,14 @@ Showing off auto updating detect-gpu along with self hosted benchmarks
 7. The PR title is updated
 
 ## Whats needed to add to another repo
- - Copy `dependabot.yml` as is
- - Copy `update-benchmarks.yml`
-    1. change linear team name
- - Generate a linear PAT
-    1. Add this to github secrets as `LINEAR_API_KEY`
+
+- Copy `dependabot.yml` as is
+- Copy `update-benchmarks.yml`
+  1. change linear team name
+- Generate a linear PAT
+  1. Add this to github secrets as `LINEAR_API_KEY`
 
 ## Thoughts
- - ???
+
+- ???
+  change
